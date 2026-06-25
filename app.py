@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 import io
 import random
 from datetime import datetime, timedelta
+import webbrowser  # Гарантируем наличие импорта для открытия веб-ссылок
 
 # Имя файла базы данных
 DB_NAME = 'кондитерская.db'
@@ -48,7 +49,7 @@ class PinkiePieApp:
         self.reports_frame = self.create_reports_frame()
         self.about_frame = self.create_about_frame()
 
-        self.show_positions() # По умолчанию открываем позиции
+        self.show_about() # По умолчанию открываем вкладку "О приложении"
 
     def get_db_connection(self):
         conn = sqlite3.connect(DB_NAME)
@@ -668,10 +669,10 @@ class PinkiePieApp:
 
         elif "6. Самый дешевый" in choice:
             best = min(data, key=lambda x: x['price'])
-            result = "--- САМЫЙ ДЕШЕВЫЙ ТОВАР ---\n\n"
+            result = "--- САМЫЙ ДОРОГОЙ ТОВАР ---\n\n"
             result += f"Товар: {best['name']} {tiers.get(best['name'], '')}\nЦена: {best['price']:.2f} руб."
 
-        elif "7. Топ-5 самых запасоемких" in choice:
+        elif "7. Top-5 самых запасоемких" in choice:
             top5 = sorted(data, key=lambda x: x['stock'], reverse=True)[:5]
             result = "--- ТОП-5 САМЫХ ЗАПАСОЕМКИХ ТОВАРОВ ---\n"
             result += f"{'Товар':<50} | {'Остаток':<10}\n"
@@ -851,8 +852,10 @@ class PinkiePieApp:
         tk.Label(center_frame, text="Версия: 2.0.0", font=("Arial", 12)).pack(pady=5)
         tk.Label(center_frame, text="Разработчик: Кирсанов Д.Ю.", font=("Arial", 12)).pack(pady=5)
         
-        github_link = "ссылка будет позже"
-        tk.Label(center_frame, text=f"GitHub: {github_link}", font=("Arial", 12), fg="blue", cursor="hand2").pack(pady=5)
+        github_link = "https://github.com/kub2888/PinkePie"
+        github_lbl = tk.Label(center_frame, text=f"GitHub: {github_link}", font=("Arial", 12), fg="blue", cursor="hand2")
+        github_lbl.pack(pady=5)
+        github_lbl.bind("<Button-1>", lambda e: webbrowser.open_new(github_link))
         
         tk.Label(center_frame, text="Приложение для CRUD-операций и аналитики\nтоваров кондитерской", font=("Arial", 11), justify=tk.CENTER).pack(pady=20)
 
